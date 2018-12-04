@@ -3,8 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import alias from 'rollup-plugin-alias';
-import uglify from 'rollup-plugin-uglify';
-import { minify } from 'uglify-es';
+import { terser } from 'rollup-plugin-terser';
 
 const license = `/**
  * Push v1.0
@@ -62,14 +61,11 @@ export default {
         }),
         commonjs(),
         resolve(),
-        uglify(
-            {
-                output: {
-                    beautify: false,
-                    preamble: license
-                }
-            },
-            minify
-        )
+        terser({
+            output: {
+                beautify: false,
+                preamble: license
+            }
+        })
     ]
 };

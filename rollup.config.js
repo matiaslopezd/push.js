@@ -6,7 +6,7 @@ import alias from 'rollup-plugin-alias';
 import { terser } from 'rollup-plugin-terser';
 
 const license = `/**
- * Push v1.0
+ * Push v1.0.9
  * =========
  * A compact, cross-browser solution for the JavaScript Notifications API
  *
@@ -41,11 +41,9 @@ const license = `/**
  * THE SOFTWARE.
  */`;
 
-export default {
+const common = {
     input: 'src/index.js',
     output: {
-        banner: license,
-        file: 'bin/push.min.js',
         format: 'umd',
         name: 'Push',
         sourcemap: true
@@ -60,12 +58,32 @@ export default {
             agents: path.resolve(__dirname, 'src/agents/index')
         }),
         commonjs(),
-        resolve(),
-        terser({
-            output: {
-                beautify: false,
-                preamble: license
-            }
-        })
+        resolve()
     ]
 };
+
+export default [
+    {
+        ...common,
+        output: {
+            ...common.output,
+            file: 'bin/push.js'
+        }
+    },
+    {
+        ...common,
+        output: {
+            ...common.output,
+            file: 'bin/push.min.js'
+        },
+        plugins: [
+            ...common.plugins,
+            terser({
+                output: {
+                    beautify: false,
+                    preamble: license
+                }
+            })
+        ]
+    }
+];
